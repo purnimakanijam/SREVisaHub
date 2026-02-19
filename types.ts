@@ -4,6 +4,7 @@ export interface JobListing {
   url: string;
   location: string;
   postedDate?: string;
+  isNew?: boolean;
 }
 
 export interface Company {
@@ -15,6 +16,15 @@ export interface Company {
   relocationBenefits: string;
   sreJobs: JobListing[];
   description: string;
+  isActivelyHiringToday?: boolean;
+  lastUpdated?: string;
+}
+
+export interface TrackerEntry {
+  jobTitle: string;
+  companyName: string;
+  dateApplied: string;
+  url: string;
 }
 
 export interface SearchResult {
