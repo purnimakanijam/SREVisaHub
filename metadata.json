@@ -1,0 +1,7 @@
+{
+  "name": "SRE Visa Hub - EU Explorer",
+  "description": "A professional platform for Site Reliability Engineers to find companies in Amsterdam and Luxembourg offering visa sponsorship and relocation support for Indian professionals, featuring daily updates and real-time job tracking.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
