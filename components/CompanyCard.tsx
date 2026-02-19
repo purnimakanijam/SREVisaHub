@@ -9,6 +9,9 @@ interface CompanyCardProps {
 }
 
 const CompanyCard: React.FC<CompanyCardProps> = ({ company, appliedJobs, onApply }) => {
+  // Filter out jobs that have already been applied to
+  const availableJobs = company.sreJobs.filter(job => !appliedJobs.includes(job.url));
+
   return (
     <div className={`bg-white rounded-xl shadow-sm border ${company.isActivelyHiringToday ? 'border-emerald-200' : 'border-slate-200'} overflow-hidden hover:shadow-md transition-all relative flex flex-col h-full`}>
       {company.isActivelyHiringToday && (
@@ -77,60 +80,50 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company, appliedJobs, onApply
         <div className="space-y-3 mt-auto">
           <div className="flex items-center justify-between">
             <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center">
-              <i className="fas fa-bolt mr-2 text-amber-500"></i> Fresh SRE Roles
+              <i className="fas fa-bolt mr-2 text-amber-500"></i> Available SRE Roles
             </h4>
           </div>
           
-          {company.sreJobs.length > 0 ? (
+          {availableJobs.length > 0 ? (
             <ul className="space-y-2">
-              {company.sreJobs.map((job, idx) => {
-                const isApplied = appliedJobs.includes(job.url);
-                return (
-                  <li key={idx} className="group">
-                    <div className="flex flex-col gap-1">
-                      <a 
-                        href={job.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-100 group-hover:bg-white group-hover:border-indigo-300 group-hover:shadow-sm transition-all"
-                      >
-                        <div className="flex-1 min-w-0 pr-2">
-                          <div className="flex items-center gap-2">
-                            <p className="text-sm font-semibold text-slate-700 group-hover:text-indigo-900 truncate">
-                              {job.title}
-                            </p>
-                            {job.isNew && (
-                              <span className="bg-amber-100 text-amber-700 text-[9px] font-black px-1.5 py-0.5 rounded uppercase">New</span>
-                            )}
-                          </div>
-                          <p className="text-[10px] text-slate-400 font-medium uppercase">{job.location}</p>
+              {availableJobs.map((job, idx) => (
+                <li key={idx} className="group">
+                  <div className="flex flex-col gap-1">
+                    <a 
+                      href={job.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-100 group-hover:bg-white group-hover:border-indigo-300 group-hover:shadow-sm transition-all"
+                    >
+                      <div className="flex-1 min-w-0 pr-2">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-semibold text-slate-700 group-hover:text-indigo-900 truncate">
+                            {job.title}
+                          </p>
+                          {job.isNew && (
+                            <span className="bg-amber-100 text-amber-700 text-[9px] font-black px-1.5 py-0.5 rounded uppercase">New</span>
+                          )}
                         </div>
-                        <i className="fas fa-external-link-alt text-[10px] text-slate-300"></i>
-                      </a>
-                      <button 
-                        onClick={() => onApply(job, company.name)}
-                        disabled={isApplied}
-                        className={`w-full py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all border ${
-                          isApplied 
-                          ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-default' 
-                          : 'bg-indigo-600 text-white border-indigo-700 hover:bg-indigo-700 shadow-sm'
-                        }`}
-                      >
-                        {isApplied ? (
-                          <span className="flex items-center justify-center">
-                            <i className="fas fa-check-circle mr-2"></i> Already Applied
-                          </span>
-                        ) : 'Apply Now'}
-                      </button>
-                    </div>
-                  </li>
-                );
-              })}
+                        <p className="text-[10px] text-slate-400 font-medium uppercase">{job.location}</p>
+                      </div>
+                      <i className="fas fa-external-link-alt text-[10px] text-slate-300"></i>
+                    </a>
+                    <button 
+                      onClick={() => onApply(job, company.name)}
+                      className="w-full py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all border bg-indigo-600 text-white border-indigo-700 hover:bg-indigo-700 shadow-sm"
+                    >
+                      Apply Now
+                    </button>
+                  </div>
+                </li>
+              ))}
             </ul>
           ) : (
             <div className="flex flex-col gap-2">
                <p className="text-xs text-slate-400 italic bg-slate-50 p-3 rounded-lg border border-dashed border-slate-200 text-center">
-                No specific SRE links listed right now.
+                {company.sreJobs.length > 0 
+                  ? "You've applied to all currently listed roles here!" 
+                  : "No specific SRE links listed right now."}
               </p>
               <a 
                 href={company.website} 
